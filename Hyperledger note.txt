@@ -1,0 +1,913 @@
+Hyperledger note
+https://www.udemy.com/hyperledger/
+https://hyperledger.github.io/composer
+
+*****************************************************************************
+******************************* INSTALLATION ********************************
+*****************************************************************************
+
+Install Visual Code
+	Docker extension
+	Hyperledger composer extension
+	
+NodeJS
+	Use v8.x.x
+	** Do NOT use v10.x.x
+
+Git
+*** IMPORTANT ***
+git config --get core.autocrlf
+git config --global core.autocrlf false
+git config --global core.longpaths true
+
+python 2.7.x
+
+Config proxy:
+C:\Users\hoangxl\.npmrc
+	Create file .npmrc
+		cd C:\Users\hoangxl
+		NUL> .npmrc
+	Edit .npmrc:
+		strict-ssl=false
+		proxy=http://donkey.cybersoft.vn:8080
+		https-proxy=http://donkey.cybersoft.vn:8080/
+	
+(Remove proxy to faster download)
+
+Failed to build python?
+	npm install --global --production windows-build-tools
+	npm install --global node-gyp
+	
+Cannot download from github git://?
+C:\Users\hoangxl\.gitconfig
+	Create file .gitconfig
+		cd C:\Users\hoangxl
+		NUL> .gitconfig
+	Edit .gitconfig:
+		[url "https://github.com/"]
+		insteadOf = git://github.com/
+	
+SSL Error: unable to get local issuer certificate
+	git config --global http.sslVerify false
+
+yeoman
+> npm install -g yo
+
+Windows build tool
+> npm install -g node-gyp
+Start PowerShell as Administrator
+> npm install --global --production windows-build-tools
+
+Composer CLI
+> npm install -g composer-cli
+> composer -v
+
+Install Composer REST Server
+> npm install -g composer-rest-server
+> composer-rest-server -v
+
+Yeoman template for Network App
+> npm install -g generator-hyperledger-composer
+> yo --generators
+
+Docker Install
+For Windows 10 Pro+:
+	https://www.docker.com/community-edition
+Other (older) versions: Docker Toolbox
+	https://docs.docker.com/toolbox/overview/
+
+Run Docker Quickstart terminal
+*** If you install Docker for Windows (Windows 10 Pro), not Docker Toolbox, you can use Windows Command Prompts to run docker command directly.
+
+Might need to change the BIOS setting:
+Security --> System Security --> Enable Virtualization Technology (VTx/VTd)
+For Asus BIOS (New version): Advanced Setting --> CPU --> Virtualization Technology --> Enable
+
+Run Docker Quickstart terminal again and it will start to setup for Docker environment
+Just test for docker command
+
+$ docker run hello-world
+Unable to find image 'hello-world:latest' locally
+Press enter...
+>>>>>>>>>>>>>>>>
+latest: Pulling from library/hello-world
+9bb5a5d4561a: Pull complete
+Digest: sha256:3e1764d0f546ceac4565547df2ac4907fe46f007ea229fd7ef2718514bcec35d
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+....
+
+Check for docker instance
+> docker ps
+
+List Docker environment setting
+Open Docker Quickstart terminal
+$ env | grep DOCKER_
+If you don't have below information, go to add to environment variable
+DOCKER_HOST=tcp://192.168.99.100:2376
+DOCKER_MACHINE_NAME=default
+DOCKER_TLS_VERIFY=1
+DOCKER_TOOLBOX_INSTALL_PATH=C:\Program Files\Docker Toolbox
+DOCKER_CERT_PATH=C:\Users\xxx\.docker\machine\machines\default
+
+Open Oracle VM VirtualBox Manager
+See there is an default VM
+Double click on that VM to open its terminal
+And type:
+ps -all
+to list all (ps : report a snapshot of the current processes.)
+
+*****************************************************************************
+************************ Hyperledger Dev Environment ************************
+*****************************************************************************
+
+******************************** Vagrant ************************************
+
+Native vs Virtual Machine for setting Hyperledger Dev Environment
+
+Hypervisor: the virtualization that creates and runs virtual machines
+Oracle VM VirtualBox: for virtualization
+Vagrant: for VM creation and management
+
+Download and install Oracle VM VirtualBox (previous steps):
+
+Download and install Vagrant:
+https://www.vagrantup.com/downloads.html
+
+Clone the Vagrant Repository:
+git clone https://github.com/acloudfan/HLF-Vagrant-Dev-Setup
+
+Open Visual Code
+> cd HLF-Vagrant-Dev-Setup
+> code .
+
+Basic Vagrant commands:
+Start the VM
+> vagrant up
+Gracefully shutdown the VM (not remove)
+> vagrant half
+Login to the VM
+> vagrant ssh
+Delete the VM
+> vagrant destroy
+
+Try it out:
+In Visual Code, at root folder of HLF-Vagrant-Dev-Setup project
+View --> Integrated Terminal
+cd HLF-Vagrant-Dev-Setup
+> vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+(On the first time, it need to download all necessary stuffs (OS, config, ..))
+
+To login
+> vagrant ssh
+Welcome to Ubuntu 16.04.4 LTS (GNU/Linux 4.4.0-116-generic x86_64)
+
+vagrant@vagrant:~$ ls
+scripts  workspace
+
+To logout:
+vagrant@vagrant:~$ logout
+Connection to 127.0.0.1 closed.
+
+To shutdown
+> vagrant halt
+==> default: Attempting graceful shutdown of VM...
+
+To remove the VM
+> vagrant destroy
+    default: Are you sure you want to destroy the 'default' VM? [y/N] y
+==> default: Destroying VM and associated drives...
+
+******************* Hyperledger Fabric Installation ************************
+
+Start VM
+> vagrant up
+
+Login
+>vagrant ssh
+
+vagrant@vagrant:~$ ls
+vagrant@vagrant:~$ ./scripts/install-prereq.sh
+========================================
+Starting installation - Pre requisites
+========================================
+..............
+Please logout then login before continuing.
+========================================
+Update Docker Configuration
+========================================
+
+vagrant@vagrant:~$ logout
+> vagrant ssh
+
+vagrant@vagrant:~$ ls
+
+vagrant@vagrant:~$ ./scripts/install-fabric-tools.sh
+=============================================
+Starting installation - Fabric Tools Install
+=============================================
+................
+
+After complete, can see a new folder named: fabric-tools
+
+vagrant@vagrant:~$ ls
+prereqs-ubuntu.sh  scripts  workspace
+vagrant@vagrant:~$ cd workspace
+
+vagrant@vagrant:~/workspace$ ls
+fabric-tools  orderer.yaml  README.md  sample  scripts  util  Vagrantfile  Vagrantfile.hyperv
+
+vagrant@vagrant:~/workspace$ ./scripts/install-composer.sh
+=============================================
+Starting installation - Composer Tools
+=============================================
+.........
+[grpc] Success: "/home/vagrant/.nvm/versions/node/v8.11.3/lib/node_modules/composer-playground/node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node" is installed via remote
++ composer-playground@0.19.12
+
+Logout and log back in
+vagrant@vagrant:~/workspace$ logout
+> vagrant ssh
+
+------------------------------------------
+Install Fabric tools
+------------------------------------------
+
+vagrant@vagrant:~/workspace/fabric-tools$ chmod 755 *.sh
+
+vagrant@vagrant:~/workspace/fabric-tools$ ./downloadFabric.sh
+Digest: sha256:4278269b115cfd0f24251b5381407be9ccdf396c1470c69e1ee2ff16917ac882
+Status: Downloaded newer image for hyperledger/fabric-couchdb:x86_64-0.4.6
+
+------------------------------------------
+Install Peer Admin Card
+------------------------------------------
+> cd util
+> npm install
+
+Create folder
+C:\Users\xxx\.composer\cards
+
+> node devutil.js
+
+Select > Install Peer Admin Card
+
+Copying files...
+Created the Peer Admin Card!!
+
+> node devutil.js
+
+Select > List cards on disk
+Existing card (1) PeerAdmin@hlfv1
+
+--------------------------------------
+Docker commands used against Docker daemon in VM
+> docker ps
+> docker image
+
+Check the environment setting variable to make sure: 
+DOCKER_HOST = tcp://localhost:2375
+DOCKER_TLS_VERIFY is undefined
+(*** NOTE: If you run Docker Quickstart Terminal and start default image, it will change above setting.... ***)
+If not, you will get below error: 
+error during connect: Get http://192.168.99.100:2375/v1.37/images/json: dial tcp 192.168.99.100:2375: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+
+Verify
+> docker images
+
+vagrant@vagrant:~/workspace/fabric-tools$ docker images
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+hyperledger/fabric-ca        x86_64-1.1.0        72617b4fa9b4        3 months ago        299MB
+hyperledger/fabric-orderer   x86_64-1.1.0        ce0c810df36a        3 months ago        180MB
+hyperledger/fabric-peer      x86_64-1.1.0        b023f9be0771        3 months ago        187MB
+hyperledger/fabric-ccenv     x86_64-1.1.0        c8b4909d8d46        3 months ago        1.39GB
+hyperledger/fabric-couchdb   x86_64-0.4.6        7e73c828fc5b        4 months ago        1.56GB
+
+------------------------------------------
+Start Fabric tool
+------------------------------------------
+vagrant@vagrant:~/workspace/fabric-tools$ ./startFabric.sh
+2018-07-07 10:17:20.740 UTC [channelCmd] executeJoin -> INFO 006 Successfully submitted proposal to join channel
+2018-07-07 10:17:20.741 UTC [main] main -> INFO 007 Exiting.....
+
+***** IT MIGHT FAILED DUE TO TIMEOUT, SHOULD RE-TRY... *****
+vagrant@vagrant:~/workspace/fabric-tools$ ./startFabric.sh
+
+
+vagrant@vagrant:~/workspace/fabric-tools$ docker ps
+CONTAINER ID        IMAGE                                     COMMAND                  CREATED             STATUS              PORTS
+                             NAMES
+a18dd4071247        hyperledger/fabric-peer:x86_64-1.1.0      "peer node start"        40 seconds ago      Up 37 seconds       0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   peer0.org1.example.com
+
+docker logs --tail 10 peer0.org1.example.com
+
+ 
+------------------------------------------
+Stop Fabric tool
+------------------------------------------
+vagrant@vagrant:~/workspace/fabric-tools$ ./stopFabric.sh
+Stopping orderer.example.com ... done
+
+--------------------------------------
+Use Docker Explorer view to view and manage docker image & container
+
+Virtual Machine on Windows cannot be accessed with localhost
+Use the IP address of Virtual Machine
+
+-------------------------------------------------------------------
+Launch / Shutdown / Supped the Fabric Development Environment:
+-------------------------------------------------------------------
+
+vagrant@vagrant:~/workspace/fabric-tools$ ./startFabric.sh
+Kill and remove running containers
+All deployed applications are removed
+Re-deploy of application will be needed
+
+vagrant@vagrant:~/workspace/fabric-tools$ ./stopFabric.sh
+Kills & removes running containers
+All deployed applications are removed
+Re-deploy of application will be needed
+
+vagrant@vagrant:~/workspace/fabric-tools$ ./fabricUtil.sh stop
+
+Suspend the dev environment and we can deploy app/chaincode then continue by start command
+
+vagrant@vagrant:~/workspace/fabric-tools$ ./fabricUtil.sh start
+
+
+*****************************************************************************
+************* 07 Fabric Under the Hood (Concepts  Terminology) **************
+*****************************************************************************
+
+------------------------------
+Ledger:
+------------------------------
+There are two part of a ledger:
+Txn log: 
+	All transactions. 
+	It is immutable (Only Create and retrieve). 
+	Use LevelDB, embedded within peer
+	Simple quires
+	Executed against peer
+State: 
+	Current state of assets
+	Mutable (CRUD are OK)
+	Key - value (Arbitrary BLOB {JSON, ...}) store
+	State(Key) = (Version, Value)
+	Be default, State Data is managed in LevelDB
+	Chain code owns the data. Access restricted to owner chaincode
+	(LevelDB will not work in cases:
+		Businesses need completed queries
+		Offline - Reports, BI and insights
+	)
+	State database is pluggable
+	Can use CouchDB to execute complete query
+
+------------------------------
+Chaincode:
+------------------------------
+Create transaction to Txn log
+CRUD state data
+
+*****************************************************************************
+******************** Dev Environment Walk-through Peer **********************
+*****************************************************************************
+
+Configuration for peer:
+..\fabric-tools\fabric-scripts\hlfv1\composer\docker-compose.yml
+
+Type of peer nodes:
+- Anchor
+- Endorser
+
+------------------------------
+Composer playground
+------------------------------
+http://composer-playground.mybluemix.net/
+
+
+*****************************************************************************
+*************************** Generate Composer Model *************************
+*****************************************************************************
+
+yo hyperledger-composer
+- Model
+- Business network
+- Angular
+
+Create new folder yeoman-test
+> cd yeoman-test
+
+vagrant@vagrant:~/workspace/yeoman-test$ yo hyperledger-composer
+Welcome to the Hyperledger Composer project generator
+? Please select the type of project: Model
+You can run this generator using: 'yo hyperledger-composer:model'
+Welcome to the model generator
+? Model project name: test-model
+? Description: test model description
+? Author name:  edward
+? Author email: edwardthienhoang@gmail.com
+? License: Apache-2.0
+? Namespace: org.example.mynetwork
+
+vagrant@vagrant:~/workspace/yeoman-test$ yo hyperledger-composer
+Welcome to the Hyperledger Composer project generator
+? Please select the type of project: Business Network
+You can run this generator using: 'yo hyperledger-composer:businessnetwork'
+Welcome to the business network generator
+? Business network name: test-model
+? Description: test model description
+? Author name:  edward
+? Author email: edwardthienhoang@gmail.com
+? License: Apache-2.0
+? Namespace: org.example.biznet
+? Do you want to generate an empty template network? Yes: generate an empty template network
+*** Remember to choose: ? Do you want to generate an empty template network? Yes: generate an empty template network ***
+
+PS D:\Hyperledger\Project\Yeoman-Test> cd .\test-model\
+> mkdir dist
+PS D:\Hyperledger\Project\Yeoman-Test\test-model> cd .\dist\
+PS D:\Hyperledger\Project\Yeoman-Test\test-model\dist> composer archive create -t dir -n ../
+
+Check test-model@0.0.1.bna file is output at ./dist folder
+
+Open http://composer-playground.mybluemix.net/login
+(Remember to clear local storage of Browser first)
+
+Choose: Deploy a new Business Model
+Choose: Drop here to upload or Browse...
+..\Yeoman-Test\test-model\dist\test-model@0.0.1.bna
+Press: Deploy
+
+Back to home page,
+Select admin@test-model and press Connect Now ->
+And see the result
+
+-----------------------------------
+Deploying a BNA to Hyperledger Fabric
+- Launch your Fabric network
+- Verify | Create the Peer Admin Card
+- Install the network application to Fabric
+- Start BNA on Fabric
+
+Start the VM
+> cd HLF-Vagrant-Dev-Setup
+> vagrant up
+> vagrant ssh
+vagrant@vagrant:~/workspace/fabric-tools$ docker images
+vagrant@vagrant:~/workspace/fabric-tools$ ./startFabric.sh
+
+vagrant@vagrant:~/workspace/fabric-tools$ ./createPeerAdminCard.sh
+
+The following Business Network Cards are available:
+
+Connection Profile: hlfv1
+┌─────────────────┬───────────┬──────────────────┐
+│ Card Name       │ UserId    │ Business Network │
+├─────────────────┼───────────┼──────────────────┤
+│ PeerAdmin@hlfv1 │ PeerAdmin │                  │
+└─────────────────┴───────────┴──────────────────┘
+............
+
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$ composer network install -a test-model@0.0.1.bna -c PeerAdmin@hlfv1
+
+composer network start -c PeerAdmin@hlfv1 -n test-model -V 0.0.1 -A admin -S adminpw
+
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$ ls
+admin@test-model.card  test-model@0.0.1.bna
+
+Import the network Administrator's card
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$ composer card import -f ./admin\@test-model.card
+
+Successfully imported business network card
+        Card file: ./admin@test-model.card
+        Card name: admin@test-model
+Command succeeded
+
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$ composer card list
+The following Business Network Cards are available:
+
+Connection Profile: hlfv1
+┌──────────────────┬───────────┬──────────────────┐
+│ Card Name        │ UserId    │ Business Network │
+├──────────────────┼───────────┼──────────────────┤
+│ admin@test-model │ admin     │ test-model       │
+├──────────────────┼───────────┼──────────────────┤
+│ PeerAdmin@hlfv1  │ PeerAdmin │                  │
+└──────────────────┴───────────┴──────────────────┘
+
+Issue composer card list --card <Card Name> to get details a specific card
+Command succeeded
+
+
+---------------------------------
+CLI: Network Command
+---------------------------------
+
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$ composer network ping -c admin@test-model
+
+The connection to the network was successfully tested: test-model
+        Business network version: 0.0.1
+        Composer runtime version: 0.19.12
+        participant: org.hyperledger.composer.system.NetworkAdmin#admin
+        identity: org.hyperledger.composer.system.Identity#67be23626b5443ecc93be04017ee82cef9f226cfc243357546f712cede7f3636
+Command succeeded
+
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$ composer network list -c admin@test-model
+
+✔ List business network from card admin@test-model
+models:
+  - org.hyperledger.composer.system
+  - org.example.biznet
+  - org.example.mynetwork
+scripts:
+  - lib/logic.js
+registries:
+  org.example.biznet.SampleAsset:
+    id:           org.example.biznet.SampleAsset
+    name:         Asset registry for org.example.biznet.SampleAsset
+    registryType: Asset
+  org.example.mynetwork.SampleAsset:
+    id:           org.example.mynetwork.SampleAsset
+    name:         Asset registry for org.example.mynetwork.SampleAsset
+    registryType: Asset
+  org.example.biznet.SampleParticipant:
+    id:           org.example.biznet.SampleParticipant
+    name:         Participant registry for org.example.biznet.SampleParticipant
+    registryType: Participant
+  org.example.mynetwork.User:
+    id:           org.example.mynetwork.User
+    name:         Participant registry for org.example.mynetwork.User
+    registryType: Participant
+Command succeeded
+
+-------------------------------------------
+UPGRADIND the network Application
+-------------------------------------------
+- Create Archive for the new version of BNA
+- Install the new version of archive
+- Upgrade the Application to the new version
+
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$ ls
+admin@test-model.card  test-model@0.0.1.bna
+
+Go to \HLF-Vagrant-Dev-Setup\yeoman-test\test-model\package.json
+Change version to "0.0.2"
+
+PS D:\Hyperledger\Project\Yeoman-Test\test-model\dist> composer archive create -t dir -n ../
+Creating Business Network Archive
+Looking for package.json of Business Network Definition
+        Input directory: ../
+Found:
+        Description: test model description
+        Name: test-model
+        Identifier: test-model@0.0.2
+Written Business Network Definition Archive file to
+        Output file: test-model@0.0.2.bna
+Command succeeded
+
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$ ls
+admin@test-model.card  test-model@0.0.1.bna  test-model@0.0.2.bna
+
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$ composer network install -a test-model@0.0.2.bna -c PeerAdmin@hlfv1
+✔ Installing business network. This may take a minute...
+Successfully installed business network test-model, version 0.0.2
+Command succeeded
+
+
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$  composer network upgrade -c PeerAdmin@hlfv1 -n test-model -V 0.0.2
+Upgrading business network test-model to version 0.0.2
+✔ Upgrading business network definition. This may take a minute...
+Command succeeded
+
+vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$ composer network ping -c admin@test-model
+The connection to the network was successfully tested: test-model
+        Business network version: 0.0.2
+        Composer runtime version: 0.19.12
+        participant: org.hyperledger.composer.system.NetworkAdmin#admin
+        identity: org.hyperledger.composer.system.Identity#67be23626b5443ecc93be04017ee82cef9f226cfc243357546f712cede7f3636
+Command succeeded
+
+
+-------------------------------------------
+REST Server tool
+-------------------------------------------
+Hyperledger Composer REST Server
+
+NodeJS based REST Server to connect to Hyperledger network (Composer Runtime): CRUD operations, Invoke Model Transactions
+
+Interactive mode
+
+Open new Terminal:
+
+PS D:\Hyperledger\Infra\Vagrant\HLF-Vagrant-Dev-Setup> composer-rest-server
+? Enter the name of the business network card to use: admin@test-model
+? Specify if you want namespaces in the generated REST API: always use namespaces
+? Specify if you want to use an API key to secure the REST API: No
+? Specify if you want to enable authentication for the REST API using Passport: No
+? Specify if you want to enable event publication over WebSockets: No
+? Specify if you want to enable TLS security for the REST API: No
+
+To restart the REST server using the same options, issue the following command:
+   composer-rest-server -c admin@test-model -n always
+
+Discovering types from business network definition ...
+Discovered types from business network definition
+Generating schemas for all types in business network definition ...
+Generated schemas for all types in business network definition
+Adding schemas for all types to Loopback ...
+Added schemas for all types to Loopback
+Web server listening at: http://localhost:3000
+Browse your REST API at http://localhost:3000/explorer
+
+Try GET/POST on org_example_mynetwork_SampleAsset
+POST
+Response Body
+{
+  "$class": "org.example.mynetwork.SampleAsset",
+  "assetId": "ID-1",
+  "value": "2000"
+}
+Response Code
+200
+
+GET
+Response Body
+[
+  {
+    "$class": "org.example.mynetwork.SampleAsset",
+    "assetId": "ID-1",
+    "value": "2000"
+  }
+]
+Response Code
+200
+
+Try POST org_example_mynetwork_ChangeAssetValue
+With data:
+{
+  "$class": "org.example.mynetwork.ChangeAssetValue",
+  "newValue": "3000",
+  "relatedAsset": "org.example.mynetwork.SampleAsset#ID-1",
+  "timestamp": "2018-07-08T07:46:39.834Z"
+}
+
+Why error???
+{
+  "error": {
+    "statusCode": 500,
+    "name": "Error",
+    "message": "Error trying invoke business network. Error: No valid responses from any peers.\nResponse from attempted peer comms was an error: Error: 2 UNKNOWN: error executing chaincode: transaction returned with failure: Error: Could not find any functions to execute for transaction org.example.mynetwork.ChangeAssetValue#b41fd1561b1b1221bad17c1617e0b7453f14e4dfaf77aa86af54b04edfc3f78d",
+    "stack": "Error: Error trying invoke business network. Error: No valid responses from any peers.\nResponse from attempted peer comms was an error: Error: 2 UNKNOWN: error executing chaincode: transaction returned with failure: Error: Could not find any functions to execute for transaction org.example.mynetwork.ChangeAssetValue#b41fd1561b1b1221bad17c1617e0b7453f14e4dfaf77aa86af54b04edfc3f78d\n    at HLFConnection.invokeChainCode (/home/vagrant/.nvm/versions/node/v8.11.3/lib/node_modules/composer-rest-server/node_modules/composer-connector-hlfv1/lib/hlfconnection.js:999:30)\n    at <anonymous>"
+  }
+}
+Response Code
+500
+
+
+-------------------------------------------
+We can shutdown the VM by:
+-------------------------------------------
+vagrant@vagrant:~/workspace/fabric-tools$ ./stopFabric.sh
+vagrant@vagrant:~/workspace/fabric-tools$ logout
+PS D:\Hyperledger\Infra\Vagrant\HLF-Vagrant-Dev-Setup> vagrant halt
+
+
+-------------------------------------------
+REST Security:
+-------------------------------------------
+- Transport Layer Security (TLS) | HTTPS & Authentication
+- Multi user setup
+
+PassportJS:
+Using PassportJS for user authentication on REST API.
+Note that, the user's identity is not Blockchain Identity
+
+Note: REST Server is create with PeerAdmin
+In case of multi-users, we should config the Launch Identity within the Blockchain network
+
+Can the Users trust the RESR Server to manage their private keys?
+If NO, we should use other approaches.
+
+
+-------------------------------------------------------
+ANGULAR 2 Application with Yeoman
+-------------------------------------------------------
+generator-hyperledger-composer generate the Angular skeleton Application
+Then the Application calls a REST API generated by the Composer REST Server.
+Composer REST Server use ID Cards (which include connection profiles and credentials) to connect to a distributed ledger through Composer SDK/API.
+
+Walkthrough steps:
+- Start & login to the VM (if use VM)
+- Launch the Fabric Runtime
+- Deploy the Business network application (BNA)
++ Can check if BNA already existed: composer card list
++ Need to re-install test-model@0.0.1.bna
++ vagrant@vagrant:~/workspace/yeoman-test/test-model/dist$
++ composer network install -a test-model@0.0.1.bna -c PeerAdmin@hlfv1
++ composer network start -c PeerAdmin@hlfv1 -n test-model -V 0.0.1 -A admin -S adminpw
++ ping to test: composer network ping -c admin@test-model
+- Launch the composer-rest-server with [admin@test-model]
+- yo hyperledger-composer:angular
+- ng serve 
+
+Open new Terminal (because the current terminal is used by REST Server)
+> vagrant ssh
+
+vagrant@vagrant:~/workspace/fabric-tools$ yo hyperledger-composer:angular
+Welcome to the Hyperledger Composer Angular project generator
+? Do you want to connect to a running Business Network? Yes
+? Project name: angular-app
+? Description: Hyperledger Composer Angular project
+? Author name: edward
+? Author email: edwardthienhoang@gmail.com
+? License: Apache-2.0
+? Name of the Business Network card: admin@test-model
+? Do you want to generate a new REST API or connect to an existing REST API?  Connect to an existing REST API
+? REST server address: http://localhost
+? REST server port: 3000
+? Should namespaces be used in the generated REST API? Namespaces are used
+Created application!
+Completed generation process
+....
+
+The project will be generated at:
+/home/vagrant/workspace/fabric-tools/angular-app
+
+Check if all modules are installed successfully
+> ng -v
+@angular/cli: 1.0.1
+node: 8.11.3
+os: linux x64
+@angular/common: 4.4.7
+@angular/compiler: 4.4.7
+@angular/core: 4.4.7
+@angular/forms: 4.4.7
+@angular/http: 4.4.7
+@angular/platform-browser: 4.4.7
+@angular/platform-browser-dynamic: 4.4.7
+@angular/router: 4.4.7
+@angular/cli: 1.0.1
+@angular/compiler-cli: 4.4.7
+
+IF there is any failed <error>,
+Open Windows Command Prompts (Administrator) and run:
+> cd HLF-Vagrant-Dev-Setup\fabric-tools\angular-app
+> npm install 
+
+Module not found: Error: Can't resolve 'ansi-html'???
+TRY:
+> npm install -g webpack-dev-server
+HLF-Vagrant-Dev-Setup\fabric-tools\angular-app> npm install --save webpack-dev-server
+
+
+Then, start the Angular App:
+> ng serve --host 0.0.0.0
+localhost:4200
+
+ERROR in /home/vagrant/workspace/fabric-tools/angular-app/src/app/org.example.mynetwork.ts (1,9): Duplicate identifier 'Asset'.
+
+ERROR in /home/vagrant/workspace/fabric-tools/angular-app/src/app/org.example.mynetwork.ts (5,9): Duplicate identifier 'Asset'.
+
+OOPS!!! It seem BNA is wrong... Let try again...
+
+
+--------------------------------------------------------
+--------------------------------------------------------
+------ Generate Model, BNA, REST and Angular2 App ------
+--------------------------------------------------------
+--------------------------------------------------------
+vagrant@vagrant:~/workspace/yeoman-test$ yo hyperledger-composer
+Welcome to the Hyperledger Composer project generator
+? Please select the type of project: Model
+You can run this generator using: 'yo hyperledger-composer:model'
+Welcome to the model generator
+? Model project name: test-bna
+? Description: test model description
+? Author name:  edward
+? Author email: edwardthienhoang@gmail.com
+? License: Apache-2.0
+? Namespace: org.example.mynetwork
+
+*** Remember to choose: ? Do you want to generate an empty template network? Yes: generate an empty template network ***
+ 
+vagrant@vagrant:~/workspace/yeoman-test$ yo hyperledger-composer
+Welcome to the Hyperledger Composer project generator
+? Please select the type of project: Business Network
+You can run this generator using: 'yo hyperledger-composer:businessnetwork'
+Welcome to the business network generator
+? Business network name: test-bna
+? Description: test model description
+? Author name:  edward
+? Author email: edwardthienhoang@gmail.com
+? License: Apache-2.0
+? Namespace: org.example.biznet
+? Do you want to generate an empty template network? Yes: generate an empty template network
+
+vagrant@vagrant:~/workspace/yeoman-test$ cd test-bna/
+vagrant@vagrant:~/workspace/yeoman-test/test-bna$ mkdir dist
+vagrant@vagrant:~/workspace/yeoman-test/test-bna$ cd dist
+vagrant@vagrant:~/workspace/yeoman-test/test-bna/dist$ composer archive create -t dir -n ../
+
+vagrant@vagrant:~/workspace/yeoman-test/test-bna/dist$ composer network install -a test-bna@0.0.1.bna -c PeerAdmin@hlfv1
+
+vagrant@vagrant:~/workspace/yeoman-test/test-bna/dist$ composer network start -c PeerAdmin@hlfv1 -n test-bna -V 0.0.1 -A admin -S adminp
+
+vagrant@vagrant:~/workspace/yeoman-test/test-bna/dist$ ls
+admin@test-bna.card  test-bna@0.0.1.bna
+vagrant@vagrant:~/workspace/yeoman-test/test-bna/dist$ composer card import -f ./admin\@test-bna.card
+
+vagrant@vagrant:~/workspace/yeoman-test/test-bna/dist$ composer card list
+The following Business Network Cards are available:
+
+Connection Profile: hlfv1
+┌──────────────────┬───────────┬──────────────────┐
+│ Card Name        │ UserId    │ Business Network │
+├──────────────────┼───────────┼──────────────────┤
+│ admin@test-bna   │ admin     │ test-bna         │
+├──────────────────┼───────────┼──────────────────┤
+│ admin@test-model │ admin     │ test-model       │
+├──────────────────┼───────────┼──────────────────┤
+│ PeerAdmin@hlfv1  │ PeerAdmin │                  │
+└──────────────────┴───────────┴──────────────────┘
+
+
+******************** LAST TRY ****************
+D:\Hyperledger\Infra\Vagrant\HLF-Vagrant-Dev-Setup
+> code .
+
+> vagrant up
+> vagrant ssh
+
+vagrant@vagrant:~/workspace/fabric-tools$ ./startFabric.sh
+
+vagrant@vagrant:~/workspace/yeoman-test/test-bna/dist$ composer network install -a test-bna@0.0.1.bna -c PeerAdmin@hlfv1
+
+vagrant@vagrant:~/workspace/yeoman-test/test-bna/dist$ composer network start -c PeerAdmin@hlfv1 -n test-bna -V 0.0.1 -A admin -S adminpw
+
+vagrant@vagrant:~/workspace/yeoman-test/test-bna/dist$ composer card list
+
+vagrant@vagrant:~/workspace$ composer-rest-server
+
+vagrant@vagrant:~/workspace$ composer-rest-server
+? Enter the name of the business network card to use: admin@test-bna
+? Specify if you want namespaces in the generated REST API: always use namespaces
+? Specify if you want to use an API key to secure the REST API: No
+? Specify if you want to enable authentication for the REST API using Passport: No
+? Specify if you want to enable event publication over WebSockets: No
+? Specify if you want to enable TLS security for the REST API: No
+
+Open new Terminal
+PS D:\Hyperledger\Infra\Vagrant\HLF-Vagrant-Dev-Setup> vagrant ssh
+
+vagrant@vagrant:~/workspace/fabric-tools$ yo hyperledger-composer:angular
+Welcome to the Hyperledger Composer Angular project generator
+? Do you want to connect to a running Business Network? Yes
+? Project name: angular-app
+? Description: Hyperledger Composer Angular project
+? Author name: edward
+? Author email: edwardthienhoang@gmail.com
+? License: Apache-2.0
+? Name of the Business Network card: admin@test-bna
+? Do you want to generate a new REST API or connect to an existing REST API?  Connect to an existing REST API
+? REST server address: http://localhost
+? REST server port: 3000
+? Should namespaces be used in the generated REST API? Namespaces are used
+
+I'm all done. Running npm install for you to install the required dependencies. If this fails, try running the command yourself.
+
+If error, open Windows CMD as Administrator:
+cd D:\Hyperledger\Infra\Vagrant\HLF-Vagrant-Dev-Setup\fabric-tools\angular-app
+> npm install
+
+After finish, come back to VS Code
+vagrant@vagrant:~/workspace/fabric-tools$ cd angular-app/
+vagrant@vagrant:~/workspace/fabric-tools/angular-app$ ng -v
+See everything is OK
+
+vagrant@vagrant:~/workspace/fabric-tools/angular-app$ npm start
+
+ERROR in /home/vagrant/workspace/fabric-tools/angular-app/src/app/org.example.mynetwork.ts (1,9): Duplicate identifier 'Asset'.
+ERROR in /home/vagrant/workspace/fabric-tools/angular-app/src/app/org.example.mynetwork.ts (5,9): Duplicate identifier 'Asset'.
+
+Open \HLF-Vagrant-Dev-Setup\fabric-tools\angular-app\src\app\org.example.mynetwork.ts
+And delete line #5
+
+vagrant@vagrant:~/workspace/fabric-tools/angular-app$ npm start
+
+ERROR in multi webpack-dev-server/client?http://localhost:4200 ./src/main.ts
+
+HLF-Vagrant-Dev-Setup\fabric-tools\angular-app> npm install --save webpack-dev-server
+
+vagrant@vagrant:~/workspace/fabric-tools/angular-app$ npm start
+(ng serve --host 0.0.0.0 proxy_config...)
+
+UP!!!
+http://localhost:4200
+
+
+**************************************************************************************
+*************************************** END ******************************************
+**************************************************************************************
