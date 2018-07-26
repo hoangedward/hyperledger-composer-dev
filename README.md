@@ -1,3 +1,7 @@
+Place .docker folder to C:/Users/xxx/ folder
+Setting DOCKER_ENV_SETTING.txt
+Github: https://github.com/hoangedward/hyperledger-test1
+
 # Part of the course on Hyperledger Fabric
 http://www.ACloudFan.com
 https://hyperledger.github.io/composer/installing/installing-prereqs#ubuntu

@@ -1,0 +1,5 @@
+DOCKER_CERT_PATH = C:\Users\edwar\.docker\machine\machines\default
+DOCKER_HOST = tcp://localhost:2375
+DOCKER_MACHINE_NAME = default
+DOCKER_TLS_VERIFY_1 = 1
+DOCKER_TOOLBOX_INSTALL_PATH = C:\Program Files\Docker Toolbox
