@@ -1,0 +1,64 @@
+Hyperledger - Blockchain Technologies for Business
+https://www.youtube.com/watch?v=Zcp5uHeo5Jk&list=PLjsqymUqgpSRXC9ywNIVUUoGXelQa4olO&index=5
+ 
+1 Introduction
+ 
+2
+All the parties have the same version of ledger (assume there is only 1 channel)
+Leverage the benefit of BLOCK in Blockchain to make the chain immutable
+Can avoid 51% attack? How to consensus.
+Thứ nhất chúng ta phải hiểu 51% attack là gì? Trong Ethereum or PoW network nói chung, cho phép tính conflict tạm thời giữa các node. Nghĩa là data giữa các node có thể inconsistency tại một thời điểm nào đó mà mạng lưới vẫn hoạt động. Ví dụ chia ra 2 phe, 1 phe chính thống có chuỗi A -> B -> C -> X1, phe hacker (với sự kiểm soát trên 51% nguồn lực của hệ thống), tiến hành sửa đổi lại chain A -> B -> C -> X2. Thời gian trôi qua, 2 chuỗi này vẫn có các chuỗi con nối vào đuôi, đến 1 lúc nào đó, chuỗi hacker sẽ giành chiến thắng vì có độ dài cao hơn, dẫn đến tình trạng fork nhánh. Các node sẽ theo Chuỗi có độ dài tốt hơn. Hệ thống vẫn chạy và data đã vĩnh viễn bị thay đổi.
+
+Trong Hyperledger, tuy nhiên, conflict - inconsistency giữa các peer là không được phép, lúc đó, tất cả transaction sẽ bị reject - nói cách khác là ngừng hoạt động hoặc phải có cơ chế để sửa lỗi, đồng bộ lại hệ thống trước khi tiếp tục giao dịch
+Extremely open for all business use-case and demand
+ 
+3
+How Hyperledger solves problems:
+There are some orgs need to exchange with each others, they don't trust each others
+Their own DB on premise ==> cause miss match
+Use 3rd-party to store data ==> costly, hard to find a party that all agree upon, and worst, what if the data is changed?
+Hyperledger will replicate DB to all parties and use consensus mechanism to synchronize data across all parties
+But what if Hacker can alter all data in all parties. Hehe, there is no mining... Nghĩa là không hề có số nonce, khi một block bị thay đổi nội dung, lập tức chain sẽ bị invalid và không còn hợp lệ.
+Sẽ ra sao nếu thay đổi luôn cả chain :D ? ... chưa có câu trả lời thích đáng.
+
+ 
+4
+Main three components of Hyperledger Fabric
+CA (Certificate Authority) - what make Hyperledger Fabric permissioned
+    Can attach to LDAP..
+Peers: maintain the ledger
+A Peer can be used for multiple channels (one ledger per channel)
+Endorser is a type of peer who simulate the transaction code and return the read/write set
+Orderer: manage/ordering the block of transactions (which were returned/responsed from endorsers) to be committed to ledger. Use Solo in development mode and Kafka in production mode
+ 
+5 Channels
+Completely independent with others
+Channel vs Business Network. I think a channel can contains multiple Business Network
+Can an Orderer live outside a channel and work/serve for multile channels or it must be inside a channel?
+ 
+6 Chaincode
+Chain code is smart contracts: read/update the ledger. The business logic is inside the chaincode.
+Use Go Lang, JS, Java
+Write, install, initialize and provide endorsement policy
+
+Front-end/Client code
+Rest API
+SDK
+Chaincode
+Ledger
+
+ 
+7
+Avoid double spending: versioning
+Orderer pack for a bunch of transactions into a block and tell peer to update
+But how to avoid versioning conflict
+Update for all peer in the channel?
+ 
+8 MSP (Membership Service Provider)
+The peer/orderer itself must have (with valid certificate) to prove that they are part of network, who they are, and in order to enter the channel and see/communicate each others
+ 
+9 Tips about Hyperledger Fabric
+When submitting the transaction, the transaction result is response immediately, but it just the simulation result from endorsers, is not updated to ledger immediately, but keeping in orderer service queue. Therefore, we need to implement to handle event/callback function to see whether the actual result is OK or rejected.
+Chaincode must be pure function, only depend on parameter and ledger, not external system/ non-determinism data (or random number) that likely different from other endorsers, be careful because it might take different result between endorsers and will be rejected by orderer.
+Hyperleger store data at bit level.
+We can store any kind of data such as: text, binary, pdf, document,... but the practice is not store huge data on blockchain, but use crypto to hash the document and store the real document in another place such as CDN, and use checksum mechanism to verify the content of document is correct or not.

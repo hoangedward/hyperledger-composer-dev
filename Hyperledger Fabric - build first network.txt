@@ -1,0 +1,20 @@
+https://www.youtube.com/watch?v=MPNkUqOKhVE&list=PLjsqymUqgpSTGC4L6ULHCB_Mqmy43OcIh
+
+1- Downloading necessary images and sample code
+
+
+
+
+2 - Run the first Hyperledger network
+
+3,4 - Crypto config
+
+5 - genesis block configuration
+
+6 - genesis block generation
+
+7 - docker compose
+
+8,9,10 - chaincode
+
+11 - chaincode event

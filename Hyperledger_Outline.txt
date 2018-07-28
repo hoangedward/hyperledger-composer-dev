@@ -1,0 +1,402 @@
+Hyperledger
+
+Online Offical Documentation
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/
+
+Hyperledger Fabric - Offical Document PDF
+https://readthedocs.org/projects/hyperledger-fabric/downloads/pdf/latest/
+
+Hyperledger Composer - Offical Document
+https://hyperledger.github.io/composer/unstable/introduction/introduction.html
+
+Hyperledger Composer Practice
+https://www.ibm.com/developerworks/cloud/library/cl-model-test-your-blockchain-network-with-hyperledger-composer-playground/index.html
+
+Blockchain Development on Hyperledger Fabric using Composer - Video course
+https://www.udemy.com/hyperledger/
+Download:
+https://drive.google.com/open?id=1MjGrACk_FiAeoYsh-Vb3CBYbYXUWiAxQ
+
+Hyperledger - Blockchain Technologies for Business
+https://www.youtube.com/watch?v=7EpPrSJtqZU&list=PLjsqymUqgpSRXC9ywNIVUUoGXelQa4olO&index=1
+
+Hyperledger Fabric - build first network
+https://www.youtube.com/watch?v=MPNkUqOKhVE&list=PLjsqymUqgpSTGC4L6ULHCB_Mqmy43OcIh&index=1
+
+
+------------------------------------
+Why Blockchain for Enterprise
+For enterprise use, we need to consider the following requirements: 
+• Participants must be identified/identifiable
+• Networks need to be permissioned
+• High transaction throughput performance
+• Low latency of transaction confirmation
+• Privacy and confidentiality of transactions and data pertaining to business transactions
+
+What is Hyperledger
+The Linux Foundation founded the Hyperledger project in 2015 to advance cross-industry blockchain technologies.
+Rather than declaring a single blockchain standard, it encourages a collaborative approach to developing blockchain technologies via a community process, with intellectual property rights that encourage open development and the
+adoption of key standards over time.
+
+
+------------------------------------
+Projects under "Hyperledger Umbrella"
+https://www.hyperledger.org/projects
+https://www.hyperledger.org/wp-content/uploads/2018/04/Hyperledger_Arch_WG_Paper_2_SmartContracts.pdf
+
+Business Blockchain Frameworks Hosted with Hyperledger
+
+Fabric
+Intended as a foundation for developing applications or solutions with a modular architecture, Hyperledger Fabric allows components, such as consensus and membership services, to be plug-and-play.
+
+Burrow
+Hyperledger Burrow is a permissionable smart contract machine. The first of its kind when released in December, 2014, Burrow provides a modular blockchain client with a permissioned smart contract interpreter built in part to the specification of the Ethereum Virtual Machine (EVM).
+
+Iroha
+Hyperledger Iroha is a business blockchain framework designed to be simple and easy to incorporate into infrastructural projects requiring distributed ledger technology.
+
+Sawtooth
+Hyperledger Sawtooth is a modular platform for building, deploying, and running distributed ledgers. Hyperledger Sawtooth includes a novel consensus algorithm, Proof of Elapsed Time (PoET), which targets large distributed validator populations with minimal resource consumption.
+
+Indy
+Hyperledger Indy is a distributed ledger, purpose-built for decentralized identity. It provides tools, libraries, and reusable components for creating and using independent digital identities rooted on blockchains or other distributed ledgers for interoperability.
+
+Hyperledger Tools
+Composer
+Hyperledger Composer is a collaboration tool for building blockchain business networks, accelerating the development of smart contracts and their deployment across a distributed ledger.
+
+Caliper
+Hyperledger Caliper is a blockchain benchmark tool, which allows users to measure the performance of a specific blockchain implementation with a set of predefined use cases.
+
+Cello
+Hyperledger Cello aims to bring the on-demand “as-a-service” deployment model to the blockchain ecosystem to reduce the effort required for creating, managing and terminating blockchains.
+
+Explorer
+Hyperledger Explorer can view, invoke, deploy or query blocks, transactions and associated data, network information, chain codes and transaction families, as well as any other relevant information stored in the ledger.
+
+Quilt
+Hyperledger Quilt offers interoperability between ledger systems by implementing ILP, which is primarily a payments protocol and is designed to transfer value across distributed ledgers and non-distributed ledgers.
+
+
+------------------------------------
+What is Hyperledger Fabric
+Hyperledger Fabric is one of the blockchain projects within Hyperledger, an open source enterprise-grade permissioned distributed ledger technology (DLT) platform, designed for use in enterprise contexts. Like other blockchain technologies, it has a ledger, uses smart contracts, and is a system by which participants manage their transactions.
+
+
+------------------------------------
+Key Features
+
+Hyperledger Fabric has been specifically architected to have a modular architecture. Whether it is pluggable consensus, pluggable identity management protocols such as LDAP or OpenID Connect, key management protocols or cryptographic libraries, the platform has been designed at its core to be configured to meet the diversity of enterprise use case requirements.
+
+Modularity
+At a high level, Fabric is comprised of the following modular components:
+• A pluggable ordering service establishes consensus on the order of transactions and then broadcasts blocks to peers.
+• A pluggable membership service provider is responsible for associating entities in the network with crypto- graphic identities.
+• An optional peer-to-peer gossip service disseminates the blocks output by ordering service to other peers.
+• Smart contracts (“chaincode”) run within a container environment (e.g. Docker) for isolation. They can be
+written in standard programming languages but do not have direct access to the ledger state.
+• The ledger can be configured to support a variety of DBMSs.
+• A pluggable endorsement and validation policy enforcement that can be independently configured per applica- tion.
+There is fair agreement in the industry that there is no “one blockchain to rule them all”. Hyperledger Fabric can be configured in multiple ways to satisfy the diverse solution requirements for multiple industry use cases.
+
+Smart Contracts (aka Chaincode)
+It is the business logic of a blockchain application.
+Most existing smart-contract capable blockchain platforms follow an order-execute architecture in which the consensus protocol:
+• validates and orders transactions then propagates them to all peer nodes,
+• each peer then executes the transactions sequentially.
+Smart contracts executing in a blockchain that operates with the order-execute architecture must be deterministic; otherwise, consensus might never be reached. To address the non-determinism issue, many platforms require that the smart contracts be written in a non-standard, or domain-specific language (such as Solidity) so that non-deterministic operations can be eliminated. This hinders wide-spread adoption because it requires developers writing smart contracts to learn a new language and may lead to programming errors.
+Further, since all transactions are executed sequentially by all nodes, performance and scale is limited. The fact that the smart contract code executes on every node in the system demands that complex measures be taken to protect the overall system from potentially malicious contracts in order to ensure resiliency of the overall system.
+
+Fabric introduces a new architecture for transactions that we call execute-order-validate. It addresses the resiliency, flexibility, scalability, performance and confidentiality challenges faced by the order-execute model by separating the transaction flow into three steps:
+• execute a transaction and check its correctness, thereby endorsing it,
+• order transactions via a (pluggable) consensus protocol, and
+• validate transactions against an application-specific endorsement policy before committing them to the ledger
+In Fabric, an application-specific endorsement policy specifies which peer nodes, or how many of them, need to vouch for the correct execution of a given smart contract. Thus, each transaction need only be executed (endorsed) by the subset of the peer nodes necessary to satisfy the transaction’s endorsement policy. This allows for parallel execution increasing overall performance and scale of the system. This first phase also eliminates any non-determinism, as inconsistent results can be filtered out before ordering.
+Because we have eliminated non-determinism, Fabric is the first blockchain technology that enables use of standard programming languages. In the 1.1.0 release, smart contracts can be written in either Go or Node.js, while there are plans to support other popular languages including Java in subsequent releases.
+
+Privacy and Confidentiality
+Hyperledger Fabric, being a permissioned platform, enables confidentiality through its channel architecture. Basically, participants on a Fabric network can establish a “channel” between the subset of participants that should be granted visibility to a particular set of transactions. Think of this as a network overlay. Thus, only those nodes that participate in a channel have access to the smart contract (chaincode) and data transacted, preserving the privacy and confidentiality of both.
+To improve upon its privacy and confidentiality capabilities, Fabric has added support for private data and is working on zero knowledge proofs (ZKP) available in the future. More on this as it becomes available.
+
+Pluggable Consensus
+The process of keeping the ledger transactions synchronized across the network — to ensure that ledgers update only when transactions are approved by the appropriate participants, and that when ledgers do update, they update with the same transactions in the same order — is called consensus.
+In the currently available releases, Fabric offers a CFT ordering service implemented with Kafka and Zookeeper. In subsequent releases, Fabric will deliver a Raft consensus ordering service implemented with etcd/Raft and a fully decentralized BFT ordering service.
+
+Consensus
+Transactions must be written to the ledger in the order in which they occur, even though they might be between different sets of participants within the network. For this to happen, the order of transactions must be established and a method for rejecting bad transactions that have been inserted into the ledger in error (or maliciously) must be put into place.
+This is a thoroughly researched area of computer science, and there are many ways to achieve it, each with different trade-offs. For example, PBFT (Practical Byzantine Fault Tolerance) can provide a mechanism for file replicas to communicate with each other to keep each copy consistent, even in the event of corruption. Alternatively, in Bitcoin, ordering happens through a process called mining where competing computers race to solve a cryptographic puzzle which defines the order that all processes subsequently build upon.
+Hyperledger Fabric has been designed to allow network starters to choose a consensus mechanism that best represents the relationships that exist between participants. As with privacy, there is a spectrum of needs; from networks that are highly structured in their relationships to those that are more peer-to-peer.
+We’ll learn more about the Hyperledger Fabric consensus mechanisms, which currently include SOLO and Kafka.
+
+Shared Ledger
+Hyperledger Fabric has a ledger subsystem comprising two components: the world state and the transaction log. Each participant has a copy of the ledger to every Hyperledger Fabric network they belong to.
+The world state component describes the state of the ledger at a given point in time. It’s the database of the ledger. The transaction log component records all transactions which have resulted in the current value of the world state; it’s the update history for the world state. The ledger, then, is a combination of the world state database and the transaction log history.
+The ledger has a replaceable data store for the world state. By default, this is a LevelDB key-value store database. The transaction log does not need to be pluggable. It simply records the before and after values of the ledger database being used by the blockchain network.
+
+
+------------------------------------
+Hyperledger Fabric - Models
+
+Hyperledger Fabric is an implementation of distributed ledger technology (DLT) that delivers enterprise-ready net- work security, scalability, confidentiality and performance, in a modular blockchain architecture.
+
+This section outlines the key design features woven into Hyperledger Fabric that fulfill its promise of a comprehensive, yet customizable, enterprise blockchain solution:
+• Assets — Asset definitions enable the exchange of almost anything with monetary value over the network, from whole foods to antique cars to currency futures.
+• Chaincode — Chaincode execution is partitioned from transaction ordering, limiting the required levels of trust and verification across node types, and optimizing network scalability and performance.
+• Ledger Features — The immutable, shared ledger encodes the entire transaction history for each channel, and includes SQL-like query capability for efficient auditing and dispute resolution.
+• Privacy — Channels and private data collections enable private and confidential multi-lateral transactions that are usually required by competing businesses and regulated industries that exchange assets on a common net- work.
+• Security & Membership Services — Permissioned membership provides a trusted blockchain network, where participants know that all transactions can be detected and traced by authorized regulators and auditors.
+• Consensus — A unique approach to consensus enables the flexibility and scalability needed for the enterprise.
+
+Assets
+Assets can range from the tangible (real estate and hardware) to the intangible (contracts and intellectual property). Hyperledger Fabric provides the ability to modify assets using chaincode transactions.
+Assets are represented in Hyperledger Fabric as a collection of key-value pairs, with state changes recorded as trans- actions on a Channel ledger. Assets can be represented in binary and/or JSON form.
+You can easily define and use assets in your Hyperledger Fabric applications using the Hyperledger Composer tool.
+
+Ledger Features
+The ledger is comprised of a blockchain (‘chain’) to store the immutable, sequenced record in blocks, as well as a state database to maintain current fabric state. There is one ledger per channel. Each peer maintains a copy of the ledger for each channel of which they are a member.
+
+Privacy
+Hyperledger Fabric employs an immutable ledger on a per-channel basis, as well as chaincode that can manipulate and modify the current state of assets (i.e. update key-value pairs). A ledger exists in the scope of a channel — it can be shared across the entire network (assuming every participant is operating on one common channel) — or it can be privatized to include only a specific set of participants.
+
+Security & Membership Services
+Hyperledger Fabric underpins a transactional network where all participants have known identities. As a result, data access control can be manipulated and governed on the broader network and on channel levels. This “permissioned” notion of Hyperledger Fabric, coupled with the existence and capabilities
+of channels, helps address scenarios where privacy and confidentiality are paramount concerns.
+
+------------------------------------
+Compare with Ethereum
+
+https://medium.com/@philippsandner/comparison-of-ethereum-hyperledger-fabric-and-corda-21c1bb9442f6
+https://blockchaintrainingalliance.com/blogs/news/ethereum-vs-hyperledger
+
+Permissioned vs Permissionless Blockchains
+In a permissionless blockchain, virtually anyone can participate, and every participant is anonymous. In such a context, there can be no trust other than that the state of the blockchain, prior to a certain depth, is immutable. In order to mitigate this absence of trust, permissionless blockchains typically employ a “mined” native cryptocurrency or transaction fees to provide economic incentive to offset the extraordinary costs of participating in a form of byzantine fault tolerant consensus based on “proof of work” (PoW).
+
+Permissioned blockchains, on the other hand, operate a blockchain amongst a set of known, identified and often vetted participants operating under a governance model that yields a certain degree of trust. A permissioned blockchain provides a way to secure the interactions among a group of entities that have a common goal but which may not fully trust each other. By relying on the identities of the participants, a permissioned blockchain can use more traditional crash fault tolerant (CFT) or byzantine fault tolerant (BFT) consensus protocols that do not require costly mining.
+
+Solution for Intellectual Property - which is better?
+Thứ nhất, core của Hyperledger luôn xoay quanh permission (authorization) và đặc tính decentralized cũng bị thu hẹp lại ở phạm vi các tổ chức / doanh nghiệp. Một mạng lưới Hyperledger luôn có một network admin, người sẽ control luôn cách vận hành của network (model, biz logic, access control, ledger) nên rất là risk. Tuy nhiên sẽ phù hợp nếu có 1 hoặc nhiều tổ chức đứng ra đảm nhiệm việc tạo, chứng nhận và lưu giữ bằng chứng về quyền sở hữu thì có thể xem xét.
+
+Với Ethereum hoặc những pure decentralized network, không có tổ chức trung tâm, mọi peer đều đồng đẳng và data sẽ không bị thay đổi dưới bất cứ hình thức nào. Nếu requirement có yêu cầu như vậy, cộng thêm ICO nữa thì Ethereum phù hợp hơn.
+
+Hyperledger nó đi theo hướng khác, không open như Ethereum, nó ko có mining, nonce gì hết, 1 peer bị sai là nó "ngoắc" luôn, ko có temporary fork như Ethereum. Và ghê nhất là thằng network admin, nó là thằng deploy chaincode lên, mà chaincode thì có thể update luôn :D
+
+Medicalchain for shared Electronic Health Records, Inter-Bank Settlement
+Hyperledger will fit.
+
+
+------------------------------------
+Hyperledger Fabric Network
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/_images/network.diagram.1_1.png
+
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/network/network.html
+Hyperledger Fabric Network Components
+A network consists of:
+• Ledgers (one per channel – comprised of the blockchain and the state database)
+• Smart contract(s) (aka chaincode)
+• Peer nodes
+• Ordering service(s)
+• Channel(s)
+• Fabric Certificate Authorities
+Consumers of Network Services
+• Client applications owned by organizations
+• Clients of Blockchain network administrators
+
+
+------------------------------------
+Peers and Orderers
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/peers/peers.html
+
+
+------------------------------------
+Transaction flow:
+https://www.youtube.com/watch?v=2_RgCfjunEU
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/txflow.html
+
+
+------------------------------------------------------------------------
+------------------- Hyperledger Fabric Development ---------------------
+------------------------------------------------------------------------
+
+------------------------------------
+Hyperledger Fabric Big Picture
+Environment/tooling/infrastructure
+Slide...
+
+Development Process
+Slide...
+
+Development Big Picture
+Slide...
+
+------------------------------------
+Business Network
+https://hyperledger.github.io/composer/latest/business-network/businessnetworkdefinition
+The Business Network Definition is a key concept of the Hyperledger Composer programming model.
+https://hyperledger.github.io/composer/latest/assets/img/BusinessNetworkFiles.svg
+Business Network Definitions are composed of:
+a set of model files
+a set of JavaScript files
+an Access Control file
+The model files defined the business domain for a business network, while the JavaScript files contain transaction processor functions. The transaction processor functions run on a Hyperledger Fabric and have access to the asset registries that are stored in the world state of the Hyperledger Fabric blockchain.
+The model files are typically created by business analysts, as they define the structure and relationships between model elements: assets, participants and transactions.
+The JavaScript files are typically created by developers who are implementing business requirements provided by business analysts.
+The Access Control file contains a set of access control rules that define the rights of the different participants in the business network.
+Once defined, a Business Network Definition can be packaged into an archive using the composer command line interface. These archives can then be deployed or updated on a Fabric, using the AdminConnection class from the composer-admin module.
+
+A business network definition has the following layout:
+models/ (optional - The set of domain models for a business network definition)
+lib/ (The scripts for a business network definition are written in ES 5 JavaScript and refer to the types that are defined in the domain models for the business network)
+permissions.acl (optional - The permissions for the business network)
+package.json (- a human-readable description and a version number)
+README.md (optional)
+
+Sample Business Network:
+https://github.com/hyperledger/composer-sample-networks
+
+
+Business Network Archive (*.bna)
+Before a business network definition can be deployed it must be packaged into a Business Network Archive (.bna) file. The composer archive create command is used to create a business network archive file from a business network definition folder on disk.
+Once the business network archive file has been created it can be deployed to Hyperledger Fabric using the composer network install command followed by a composer network start command.
+
+
+Business Network Card = Account to a network
+https://hyperledger.github.io/composer/latest/playground/id-cards-playground
+A Business Network Card provides all of the information needed to connect to a blockchain business network. It is only possible to access a blockchain Business Network through a valid Business Network Card. A Business Network Card contains and Identity for a single Participant within a deployed business network. You can have multiple Business Network Cards for a single deployed Business Network, where those Business Network Cards belong to multiple Participants.
+
+Example:
+https://hyperledger.github.io/composer/latest/playground/images/id-card.png
+Here is a Business Network Card that may be used to connect to the business network named 'my-business-network' using the Identity 'New User'
+
+Business Network Card can then be exported and shared with others, allowing them to connect to the business network using the issued identity.
+
+
+------------------------------------
+Peer/Network/Channel Admin?
+
+There are two levels of security with Hyperledger Composer:
+- Hyperledger Fabric administrator
+- Business network administrator
+The administrator for your local Hyperledger Fabric is the Peer Administrator (or PeerAdmin for short), which you created when you installed the local Hyperledger Fabric. Every business network should have an administrator as well, which is created when the network is deployed by the Hyperledger Fabric administrator. Authentication for both is handled using ID Cards, which you'll learn about next.
+In a development installation, such as the one on your computer, the PeerAdmin ID card is created when you install the local Hyperledger Fabric (PeerAdmin@hlfv1)
+When the PeerAdmin deploys your network to the Hyperledger Fabric, an ID card is issued to the business network administrator
+
+The PeerAdmin is a special role reserved for functions such as:
+- Deploying business networks
+- Creating, issuing, and revoking ID cards for business network admins
+The business network admin is a special role reserved for functions such as:
+- Updating the running business network
+- Querying the various registries (participant, identity, and so forth)
+- Creating, issuing, and revoking ID cards for participants in the business network
+
+Peer Admin?
+https://www.ibm.com/developerworks/cloud/library/cl-deploy-interact-extend-local-blockchain-network-with-hyperledger-composer/index.html
+
+PeerAdmin identity, with privileges to install chaincode to the peer as well as start chaincode on the composerchannel channel
+cd $COMPOSER_ROOT/fabric-dev-servers
+./downloadFabric.sh
+./startFabric.sh
+./createPeerAdminCard.sh
+
+Channel
+Is the concept of Hyperledger Fabric (See Hyperledger Fabric Network)
+Business Network or Programming Model is the concept of Hyperledger Composer
+
+- Create Business Network model
+https://ibm-blockchain.github.io/develop/tutorials/developer-tutorial.html
+(That tutorial will deploy Business Network model to channel called composerchannel)
+
+
+------------------------------------
+Hyperledger Fabric Environment Setup
+
+Setup Fabric
+Develop model, chaincode
+REST Server
+REST Client
+
+Step by step:
+- Installing IBM Blockchain Platform: Develop:
+https://ibm-blockchain.github.io/develop/installing/installing-index
+- Deploying a IBM Blockchain Platform: Develop blockchain business network to Hyperledger Fabric for a single organization
+https://ibm-blockchain.github.io/develop/tutorials/deploy-to-fabric-single-org
+- Developing Business Networks
+https://ibm-blockchain.github.io/develop/business-network/business-network-index
+
+
+--------------------------------------
+Hyperledger Composer
+	https://hyperledger.github.io/composer/latest/
+
+Hyperledger Fabric Composer SDK
+	https://hyperledger-fabric.readthedocs.io/en/release-1.1/fabric-sdks.html
+	https://fabric-sdk-node.github.io/
+	https://github.com/hyperledger/fabric-sdk-java
+	
+
+Hyperledger Composer Playground
+	http://composer-playground.mybluemix.net/
+	https://ibm-blockchain.github.io/develop/tutorials/playground-tutorial
+
+
+Hyperledger Composer CLI
+	https://hyperledger.github.io/composer/latest/reference/commands
+
+Hyperledger Composer REST Server
+	https://hyperledger.github.io/composer/latest/reference/rest-server
+
+Hyperledger Composer REST Client
+	https://hyperledger.github.io/composer/latest/applications/web
+
+
+Modeling language (*.cto)
+	https://hyperledger.github.io/composer/latest/reference/cto_language
+
+Chaincode (*.js)
+	https://hyperledger-fabric.readthedocs.io/en/release-1.2/chaincode4ade.html
+
+Access Control List (.acl)
+	https://ibm-blockchain.github.io/develop/tutorials/acl-trading
+
+Authentication with Google Oauth2
+https://ibm-blockchain.github.io/develop/tutorials/google_oauth2_rest
+
+Writing Node.js Applications
+https://hyperledger.github.io/composer/latest/applications/node
+
+Testing
+	Mocha, chai
+	https://hyperledger.github.io/composer/latest/business-network/testing
+
+Deploy
+	https://hyperledger.github.io/composer/latest/business-network/bnd-deploy
+	https://hyperledger.github.io/composer/latest/tutorials/deploy-to-fabric-single-org
+
+Advanced:
+
+Network setup in details for Network Operator:
+- Building Your First Network
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/build_network.html
+- Adding an Org to a Channel
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/channel_update_tutorial.html
+- Upgrading Your Network Components
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/upgrading_your_network_tutorial.html
+- Operations Guides
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/ops_guide.html	
+
+Architecture reference:
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/architecture.html
+- Architecture Explained
+- Transaction Flow
+- Hyperledger Fabric CA's User Guide
+- Hyperledger Fabric SDKs
+- Service Discovery
+- Channels
+- Capability Requirements
+- CouchDB as the State Database
+- Peer channel-based event services
+- Private Data
+- Read-Write set semantics
+- Gossip data dissemination protocol
+
+Glossary
+https://hyperledger-fabric.readthedocs.io/en/release-1.2/glossary.html
