@@ -469,3 +469,44 @@ https://blog.selman.org/2017/07/08/getting-started-with-blockchain-development/ 
 Hyperledger Composer is a set of abstractions, tools and APIs to model, build, integrate and deploy a blockchain solution (a business network archive). Composer business network archives may be deployed to Hyperledger Fabric for execution.
 So, Composer RUNS ON Fabric. Either can be used to implement a blockchain solution, however the level of abstraction, tools and languages used are quite different. Internally the Composer APIs map down to the underlying Fabric APIs – this access is managed by the Composer runtime however, which can provide a range of services that ease application development
 
+----------------------------------------
+Hyperledger Fabric Key Concepts:
+https://hyperledger-fabric.readthedocs.io/en/release-1.3/key_concepts.html
+
+I. Identity
+Having a valid credit card is not enough — it must also be accepted by the store! PKIs and MSPs work together in the same way — a PKI provides a list of identities, and an MSP says which of these are members of a given organization that participates in the network.
+
+What are PKIs?
+A public key infrastructure (PKI) is a collection of internet technologies that provides secure communications in a network. It’s PKI that puts the S in HTTPS — and if you’re reading this documentation on a web browser, you’re probably using a PKI to make sure it comes from a verified source.
+
+There are four key elements to PKI:
+	Digital Certificates
+	Public and Private Keys
+	Certificate Authorities
+	Certificate Revocation Lists
+	
+CAs are a common part of internet security protocols, and you’ve probably heard of some of the more popular ones: Symantec (originally Verisign), GeoTrust, DigiCert, GoDaddy, and Comodo, among others.
+
+Root CAs, Intermediate CAs and Chains of Trust
+A chain of trust is established between a Root CA and a set of Intermediate CAs as long as the issuing CA for the certificate of each of these Intermediate CAs is either the Root CA itself or has a chain of trust to the Root CA.
+
+Fabric CA
+It’s because CAs are so important that Fabric provides a built-in CA component to allow you to create CAs in the blockchain networks you form. This component — known as Fabric CA is a private root CA provider capable of managing digital identities of Fabric participants
+
+Now that you’ve seen how a PKI can provide verifiable identities through a chain of trust, the next step is to see how these identities can be used to represent the trusted members of a blockchain network. That’s where a Membership Service Provider (MSP) comes into play — it identifies the parties who are the members of a given organization in the blockchain network.
+
+II. MSP (Membership Service Provider)
+MSPs appear in two places in a blockchain network: channel configuration (channel MSPs), and locally on an actor’s premise (local MSP)
+
+Local MSPs are defined for clients (users) and for nodes (peers and orderers). Node local MSPs define the permissions for that node (who the peer admins are, for example). The local MSPs of the users allow the user side to authenticate itself in its transactions as a member of a channel (e.g. in chaincode transactions), or as the owner of a specific role into the system (an org admin, for example, in configuration transactions).
+
+Every node and user must have a local MSP defined
+
+Channel MSPs define administrative and participatory rights at the channel level
+Every organization participating in a channel must have an MSP defined for it. Peers and orderers on a channel will all share the same view of channel MSPs, and will therefore be able to correctly authenticate the channel participants. This means that if an organization wishes to join the channel, an MSP incorporating the chain of trust for the organization’s members would need to be included in the channel configuration. Otherwise transactions originating from this organization’s identities will be rejected.
+
+III. PBFT (Practical Byzantine Fault Tolerance)
+https://viblo.asia/p/bai-toan-cac-vi-tuong-byzantine-va-ung-dung-trong-blockchain-jvEla4vmZkw
+
+
+
