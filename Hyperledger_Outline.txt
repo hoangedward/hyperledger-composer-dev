@@ -327,11 +327,19 @@ https://ibm-blockchain.github.io/develop/business-network/business-network-index
 Hyperledger Composer
 	https://hyperledger.github.io/composer/latest/
 
-Hyperledger Fabric Composer SDK
+Hyperledger Fabric Client SDK
 	https://hyperledger-fabric.readthedocs.io/en/release-1.1/fabric-sdks.html
 	https://fabric-sdk-node.github.io/
 	https://github.com/hyperledger/fabric-sdk-java
 	
+Hyperledger Fabric SDKs vs Hyperledger Composer:
+	https://blog.selman.org/2017/07/08/getting-started-with-blockchain-development/
+	1) Hyperledger Fabric v1.1 supports writing chaincode in two languages: Golang and JavaScript via Node.js
+	If you want to do all of the heavy lifting yourself, you can write straight chaincode.
+	2) Hyperledger Composer provides a higher-level model-driven language for developing smart contracts. It currently only allows deployment of these artifacts to Hyperledger Fabric. It also happens to support writing functions in JavaScript as well.
+	So if you want to start from a higher-level model-driven approach, Hyperledger Composer is the way to go. If you want to write all of the plumbing yourself or use very low-level chaincode features, then using chaincode itself is the way to go.
+	
+	Hyperledger Composer is both an application development framework and set of powerful tools which simplifies and expedites the creation of blockchain applications and smart contracts that are ultimately executed on the Hyperledger Fabric blockchain. Composer has its own runtime, that is generic chaincode and hosts and interprets the business network deployed - so your smart contract need only use Javascript, not chaincode in Go a (which is Fabric's domain) s you mentioned. It also has a modeling facility to create your business network model and to define such controls as Access Control lists and queries to be executed.
 
 Hyperledger Composer Playground
 	http://composer-playground.mybluemix.net/
@@ -400,3 +408,64 @@ https://hyperledger-fabric.readthedocs.io/en/release-1.2/architecture.html
 
 Glossary
 https://hyperledger-fabric.readthedocs.io/en/release-1.2/glossary.html
+
+2018/11/28
+----------------------
+Hyperledger Fabric SDK, Chaincode language, Hyperledger Composer language, Shell script
+ 
+I. Hyperledger Fabric SDK
+https://hyperledger-fabric.readthedocs.io/en/release-1.3/fabric-sdks.html
+The Hyperledger Fabric SDK provides a powerful API to interact with a Hyperledger Fabric blockchain.
+ 
+Hyperledger Fabric SDK for Node.js
+https://fabric-sdk-node.github.io/release-1.3/index.html
+The Hyperledger Fabric SDK for Node.js provides a powerful API to interact with a Hyperledger Fabric blockchain. The SDK is designed to be used in the Node.js JavaScript runtime.
+ 
+Overview
+Applications can be developed to interact with the blockchain network on behalf of the users. APIs are available to:
+    create channels
+    ask peer nodes to join the channel
+    install chaincodes in peers
+    instantiate chaincodes in a channel
+    invoke transactions by calling the chaincode
+    query the ledger for transactions or blocks
+...
+ 
+II. Shell script:
+For example: join-channel.sh: ask peer nodes to join the channel
+peer channel join -o $ORDERER_ADDRESS -b $GENESIS_BLOCK
+It is using native peer binary command to setting peer to join the channel
+ 
+III. Chaincode language
+https://medium.com/swlh/hyperledger-chapter-8-what-is-hyperledger-fabric-chaincode-a74778dff2ae
+https://www.npmjs.com/package/fabric-shim
+https://fabric-shim.github.io/release-1.3/index.html
+https://blog.selman.org/2017/07/08/getting-started-with-blockchain-development/ (Coding for Fabric)
+https://hyperledger-fabric.readthedocs.io/en/latest/chaincode4ade.html
+Chaincode is a program (smart contract) that is written to read and update the ledger state. All the business logic is inside the chaincode.
+Quick High Level Overview:
+    Peer can be part of one or more channel
+    Every channel has a separate ledger
+    Every Channel has one or more chain codes
+    Every Chain code has a different endorsement policy
+    Chaincode must be part of a channel. As the ledger is part of a channel. One channel can have as many chaincodes as possible.
+    Chaincode must be installed in each peer that is part of the channel and instantiated.
+    When a Chaincode gets instantiated a policy (endorsing) has to be defined. [consensus: before a transaction can be recorded in the ledger only if a rule is met]
+ 
+Chaincode Key APIs
+An important interface that you can use when writing your chaincode is defined by Hyperledger Fabric —
+    ChaincodeStub
+    ChaincodeStubInterface
+ 
+The key APIs for chaincode include:
+    func (stub *ChaincodeStub) GetState(key string) ([]byte, error)
+    func (stub *ChaincodeStub) PutState(key string, value []byte) error
+    func (stub *ChaincodeStub) DelState(key string) error
+ 
+IV. Hyperledger Composer language
+https://blog.selman.org/2017/03/01/introduction-to-fabric-composer/
+NOTE: Business Network, Card are the concepts of Composer
+https://blog.selman.org/2017/07/08/getting-started-with-blockchain-development/ (Coding for Composer)
+Hyperledger Composer is a set of abstractions, tools and APIs to model, build, integrate and deploy a blockchain solution (a business network archive). Composer business network archives may be deployed to Hyperledger Fabric for execution.
+So, Composer RUNS ON Fabric. Either can be used to implement a blockchain solution, however the level of abstraction, tools and languages used are quite different. Internally the Composer APIs map down to the underlying Fabric APIs – this access is managed by the Composer runtime however, which can provide a range of services that ease application development
+
