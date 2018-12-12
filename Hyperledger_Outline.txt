@@ -510,3 +510,98 @@ https://viblo.asia/p/bai-toan-cac-vi-tuong-byzantine-va-ung-dung-trong-blockchai
 
 
 
+--------------------------------------------
+Participants and identities
+https://hyperledger.github.io/composer/latest/managing/participantsandidentities
+--------------------------------------------
+ 
+-- A Participant is an actor in a business network. A participant might be an individual an organization. A participant can create assets, and also exchange assets with other participants. A participant works with assets by submitting transactions.
+-- A participant has a set of Identity documents that can be validated to prove the identity of that participant. 
+ 
+-- Define model in Business Network Definition
+namespace net.biz.digitalPropertyNetwork
+ 
+participant Person identified by personId {
+  o String personId
+  o String firstName
+  o String lastName
+}
+ 
+-- Add a new instance of a participant to a participant registry
+composer participant add -c admin@network -d '{"$class":"net.biz.digitalPropertyNetwork.Person","personId":"mae@biznet.org","firstName":"Mae","lastName":"Smith"}'
+https://hyperledger.github.io/composer/latest/reference/composer.participant.add.html
+ 
+-- Issue Identity for Participant
+composer identity issue -c admin@network -f maeid1.card -u maeid1 -a "resource:net.biz.digitalPropertyNetwork.Person#mae@biznet.org"
+https://hyperledger.github.io/composer/latest/reference/composer.identity.issue.html
+ 
+-- Imports a card which has already been created into your local wallet.
+composer card import -f maeid1@network.card
+https://hyperledger.github.io/composer/latest/reference/composer.card.import.html
+ 
+-- Test
+composer network ping -c maeid1@network
+ 
+-- Interacting with Hyperledger Fabric
+https://hyperledger.github.io/composer/latest/managing/connector-information
+
+
+------------------------------------------
+Deploying to a single organization Hyperledger Fabric
+https://hyperledger.github.io/composer/latest/tutorials/deploy-to-fabric-single-org
+------------------------------------------
+ 
+Organization Admin:
+The organization Org1 is configured with a user named Admin@org1.example.com. This user is an administrator. Administrators for an organization have the permission to install the code for a blockchain business network onto their organization's peers, and can also have the permission to start the blockchain business network, depending on configuration.
+ 
+Start Fabric + Organization Admin, then create and start Channel named composerchannel. And let peer0.org1.example.com join the channel.
+ 
+Then create connection.json profile
+ 
+Creating a business network card for the Hyperledger Fabric administrator
+composer card create -p connection.json -u PeerAdmin -c Admin@org1.example.com-cert.pem -k 114aab0e76bf0c78308f89efc4b8c9423e31568da0c340ca187a9b17aa9a4457_sk -r PeerAdmin -r ChannelAdmin
+https://hyperledger.github.io/composer/latest/reference/composer.card.create.html
+ 
+(Other Composer CLI Command Reference)
+https://hyperledger.github.io/composer/latest/reference/commands
+ 
+Importing the business network card for the Hyperledger Fabric administrator
+composer card import -f PeerAdmin@fabric-network.card
+ 
+Installing the Hyperledger Composer business network onto the Hyperledger Fabric peer nodes
+(that you specified in the connection profile file)
+composer network install -c PeerAdmin@fabric-network -a tutorial-network@0.0.1.bna
+ 
+Starting the blockchain business network
+composer network start --networkName tutorial-network --networkVersion 0.0.1 -A admin -S adminpw -c PeerAdmin@fabric-network
+When a blockchain business network is deployed, you must create at least one participant who will be a blockchain business network administrator. This participant is responsible for onboarding other participants into the blockchain business network. Here, we are specifying that we want to create a single blockchain business network administrator called admin.
+This specifies that our blockchain business network administrator admin will use an enrollment secret of adminpw to request a certificate and private key from the CA (Certificate Authority).
+ 
+
+Importing the business network card for the business network administrator
+composer card import -f admin@tutorial-network.card
+ 
+Testing the connection to the blockchain business network
+composer network ping -c admin@tutorial-network
+
+
+------------------------------------------
+Deploying to a multi-organization Hyperledger Fabric
+https://hyperledger.github.io/composer/latest/tutorials/deploy-to-fabric-multi-org
+------------------------------------------
+Basically, the fundamental steps are the same as in case of single organization. Except:
+We need to install BNA on both Org
+Defining the endorsement policy
+A running business network has an endorsement policy, which defines the rules around which organizations must endorse transactions before they can be committed to the blockchain. By default, a business network is deployed with an endorsement policy that states that only one organization has to endorse a transaction before it can be committed to the blockchain.
+In real world blockchain business networks, multiple organizations will want to ensure that they endorse transactions before they can be committed to the blockchain, and so the default endorsement policy is not suitable. Instead, you can specify a custom endorsement policy when you start a business network.
+https://hyperledger-fabric.readthedocs.io/en/release-1.3/endorsement-policies.html
+ 
+When the business network is started, the certificates (the public part of the identity) for all of the business network administrators must be passed to the organization performing the commands to start the business network
+ 
+Retrieving business network administrator certificates for Org1 (the same for Org2)
+composer identity request -c PeerAdmin@byfn-network-org1 -u admin -s adminpw -d alice
+ 
+Starting the business network
+composer network start -c PeerAdmin@byfn-network-org1 -n trade-network -V 0.1.14 -o endorsementPolicyFile=/tmp/composer/endorsement-policy.json -A alice -C alice/admin-pub.pem -A bob -C bob/admin-pub.pem
+
+
